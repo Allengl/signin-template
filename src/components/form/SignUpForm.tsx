@@ -1,13 +1,14 @@
 'use client'
 
 import { useForm } from "react-hook-form"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 import Link from "next/link"
 import GoogleSignInButton from "../GoogleSignInButton"
+import { useRouter } from "next/navigation"
 
 const formSchema = z
   .object({
@@ -28,6 +29,7 @@ const formSchema = z
 
 
 const SignUpForm = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,9 +40,25 @@ const SignUpForm = () => {
     },
   })
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const onSubmit = async(values: z.infer<typeof formSchema>) => {
+  
+    const response = await fetch('/api/user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: values.username,
+        email: values.email,
+        password: values.password
+      })
+  })
 
+    if(response.ok) {
+      router.push('/sign-in')
+    } else {
+      console.error('Registration failed');
+    }
   }
 
   return (
@@ -54,7 +72,7 @@ const SignUpForm = () => {
               <FormItem>
                 <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input placeholder="jhondoe" {...field} />
+                  <Input placeholder="johndoe" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
