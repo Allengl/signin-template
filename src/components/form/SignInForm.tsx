@@ -11,6 +11,7 @@ import GoogleSignInButton from "../GoogleSignInButton"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useToast } from "../ui/use-toast"
+import GithubSignInButton from "../GithubSignInButton"
 
 const formSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email"),
@@ -87,7 +88,10 @@ const SignInForm = () => {
       after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400">
         or
       </div>
-      <GoogleSignInButton>Sign in with Google</GoogleSignInButton>
+      <div className="space-y-2">
+        <GoogleSignInButton>Sign in with Google</GoogleSignInButton>
+        <GithubSignInButton>Sign in with Github</GithubSignInButton>
+      </div>
       <p className="text-center text-sm text-gray-600 mt-2">
         If you don&apos;t have an account, please&nbsp;
         <Link className="text-blue-500 hover:underline" href='/sign-up'>Sign up</Link>
